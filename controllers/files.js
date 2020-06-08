@@ -1,4 +1,5 @@
-const Upload = require("../models/file.model");
+
+const File = require("../models/file.model");
 
 /**
  * Controllers for :
@@ -12,7 +13,7 @@ const Upload = require("../models/file.model");
 class FileContoller {
   //route hancler to get all files
   getFiles(req, res) {
-    let files = Upload.find();
+    let files = Files.find();
     files.then((result) => {
       res.status(200).json({
         status: "true",
@@ -20,6 +21,20 @@ class FileContoller {
         data: result,
       });
     });
+    
+  deleteFile(req, res) {
+    File.deleteOne({ _id: req.params.id })
+      .then(() => {
+        res.status(200).json({
+          status: true,
+          message: "File Deleted",
+        });
+      })
+      .catch((error) => {
+        res.status(400).json({
+          status: error,
+        });
+      });
   }
 }
 
