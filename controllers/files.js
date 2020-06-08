@@ -11,7 +11,6 @@ const CustomError = require("../utils/CustomError");
  * updateFile,
  * deleteFile
  */
-
 class FileContoller {
   // Get one file
   async getFile(req, res) {
@@ -24,16 +23,12 @@ class FileContoller {
     })
 
   }
-
   //route handler to get all files
   async getFiles(req, res) {
     let files = await File.find();
-
     if (!files) return res.status(200).json(response("No Files Found", files, true))
-
     return res.status(200).json(response("All Files Found", files, true))
   }
-
   // Delete one file
   deleteFile(req, res) {
     File.deleteOne({ _id: req.params.id }).then(() => {
@@ -43,28 +38,15 @@ class FileContoller {
       });
     });
   }
-
   async updateFile(req, res, next) {
     await   File.findOneAndUpdate(
         {_id:req.params.fileId} 
         ,req.body,
-
         {new:true},
-        (err,id)=>{
-                if(err) return res.status(404).json({
-                    error:err,
-                    status:false,
-                });
-                res.json(
-                {
-                    meesage:'file updated',
-                    meesage:true,
-                    
-                }
-                 ) 
+        (err,file)=>{
+                if (err) throw new CustomError("Error occured while retriving files");
+                 res.status(200).json(response("file updated", file, true)); 
         });
-  
-  
       }
 }
 
