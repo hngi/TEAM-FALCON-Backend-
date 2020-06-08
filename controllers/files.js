@@ -44,7 +44,7 @@ class FileContoller {
         ,req.body,
         {new:true},
         (err,file)=>{
-                if (err) throw new CustomError("Error occured while updating the  file");
+                if (err) throw new CustomError("Error occured while updating the file");
                  res.status(200).json(response("file updated", file, true)); 
         });
       }
