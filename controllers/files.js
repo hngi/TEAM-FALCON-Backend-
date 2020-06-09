@@ -19,6 +19,7 @@ class FileContoller {
     if (req.file) req.body["fileURL"] = req.file.path;
 
     let file = new File(req.body);
+    
     if (typeof req.file == "undefined") {
       return res.status(400).json({
         status: false,
