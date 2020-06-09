@@ -33,8 +33,8 @@ app.listen(port, () => {
   initDB();
 });
 
-app.on("error", (error) => {
-  console.log("::> An error occurred in our server " + error);
+app.on('error', (error) => {
+     console.log("::> An error occurred in our server " + error);
 });
 
 module.exports = app;
