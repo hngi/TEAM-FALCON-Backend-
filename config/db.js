@@ -9,7 +9,7 @@ const options = {
 };
 
 function initializeDB() {
-  mongoose.connect(uri, options)
+  return mongoose.connect(uri, options)
     .then(() => console.log(':: Connected to database'))
     .catch(error => console.log(":: Couldn't connect to database ", error));
 };
