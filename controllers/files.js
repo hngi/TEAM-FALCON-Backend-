@@ -19,10 +19,17 @@ class FileContoller {
     if (req.file) req.body["fileURL"] = req.file.path;
 
     let file = new File(req.body);
+    if (typeof req.file == "undefined") {
+      return res.status(400).json({
+        status: false,
+        message: 'Please select a file'
+      })
+    } else {
     file.save();
 
     res.status(201).json(response("File created", file, true));
   }
+}
 
   // Get one file
   async getFile(req, res) {
