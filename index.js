@@ -35,5 +35,5 @@ app.listen(port, () => {
 });
 
 app.on('error', (error) => {
-     console.log("::> An error occiurred in our server " + error);
+     console.log("::> An error occurred in our server " + error);
 });
