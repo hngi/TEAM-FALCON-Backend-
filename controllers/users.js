@@ -1,10 +1,13 @@
-const Users = require("./../models/users.model");
+const {
+    User,
+    validateUser
+} = require("./../models/users.model");
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
-dotenv.config();
-// const response = require("./../utils/response");
+const response = require("./../utils/response");
 const CustomError = require("./../utils/CustomError");
+const jwtSecret = process.env.JWT_SECRET;
 // const validate = require("./../utils/validate");
 
 /**
@@ -16,57 +19,97 @@ const CustomError = require("./../utils/CustomError");
 class UserContoller {
 
     // user signup
-    signUp(req, res) {
-        const { fullName, email, password } = req.body;
+    async signUp(req, res) {
         // validate user
-        if (!fullName || !email || !password) {
-            return res.json({
-                status: 400,
-                message: 'Please fill in the required field'
-            })
-        }
+        const {
+            error
+        } = validateUser(req.body);
+        if (error) throw new CustomError(error.details[0].message)
+        const {
+            email
+        } = req.body;
+        // Check user email exist 
+        if (await User.findOne({
+                email
+            })) throw new CustomError("Email already exists");
 
-        // Check user exist 
-        Users.findOne({ email }, (err, user) => {
-            if (user) return res.json({
-                status: 400,
-                message: 'User already exist'
-            });
+        let user = new User(req.body)
 
-            const users = new Users({
-                fullName,
-                email,
-                password
-            })
+        const salt = await bcrypt.genSalt(10)
+        const hash = await bcrypt.hash(user.password, salt)
+        user.password = hash;
 
-            bcrypt.genSalt(10, (err, salts) => {
-                bcrypt.hash(users.password, salts, (err, hash) => {
-                    if (err) throw new CustomError('there is an error');
-                    users.password = hash;
-                    users.save(user => {
-                        jwt.sign(
-                            { id: users.id },
-                            process.env.JWT_SECRET,
-                            { expiresIn: 3600 }, (err, token) => {
-                                if (err) throw new CustomError('there is an error');
-                                res.json({
-                                    status: 200,
-                                    data: {
-                                        token,
-                                        id: users.id,
-                                        fullName: users.fullName,
-                                        email: users.email,
-                                        password: users.password
-                                    }
-                                })
-                            }
-                        )
-                    })
-                })
-            })
+        user.save(user)
 
+        const token = jwt.sign({
+            id: user._id
+        }, jwtSecret, {
+            expiresIn: 36000
         })
 
+        const data = {
+            token,
+            uid: user.id,
+            fullName: user.fullName,
+            email: user.email,
+        }
+
+        res.status(201).json(response("User created", data, true, req))
+    }
+
+
+    async authenticate(req, res) {
+        const {
+            error
+        } = this.validateLogin(req.body);
+        if (error) throw new CustomError(error.details[0].message);
+
+        const user = await User.findOne({
+            email: req.body.email
+        });
+        if (!user) throw new CustomError("Incorrect email or password");
+        const isCorrect = await bcrypt.compare(req.body.password, user.password)
+        if (!isCorrect) throw new CustomError("Incorrect email or password");
+
+        const token = jwt.sign({
+            id: user._id
+        }, jwtSecret, {
+            expiresIn: 36000
+        })
+
+        const data = {
+            uid: user._id,
+            email: user.email,
+            role: user.role,
+            token
+        };
+
+        res.status(200).json(response("User", data, true, req))
+    }
+
+    async updateConfig(req, res) {
+        const user = await User.findByIdAndUpdate({
+            _id: req.user._id
+        }, {
+            "$set": {
+                config: req.body
+            }
+        }, {
+            new: true,
+        });
+
+        if (!user) throw new CustomError("user dosen't exist", 404);
+
+        res.status(200).send(response("All Files Found", user.config, true, req));
+    }
+
+    validateLogin(req) {
+        const schema = Joi.object({
+            email: Joi.string().required().email(),
+            password: Joi.string().required()
+        });
+
+        return schema.validate(req);
     }
 }
 

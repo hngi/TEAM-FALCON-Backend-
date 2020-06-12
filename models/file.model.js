@@ -10,9 +10,14 @@ const fileSchema = new mongoose.Schema(
     },
     title: {
       type: String,
-      required: true
+      required: true,
+      unique: true
     },
     fileURL: {
+      type: String,
+      required: true
+    },
+    userId: {
       type: String,
       required: true
     }
