@@ -20,7 +20,8 @@ const response = (message, data, success, req, res) => {
     data: data || null,
     success: success == null ? true : success,
   };
-  if (req && req.user.config.responseType == "XML") {
+  if (req && req.user && req.user.config && req.user.config.responseType == "XML") {
+    console.log(req.user.config.responseType, "=============================")
     return toXML(res, resp);
   }
 

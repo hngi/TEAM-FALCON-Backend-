@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const response = require("./../utils/response");
 const CustomError = require("./../utils/CustomError");
 const jwtSecret = process.env.JWT_SECRET;
+const Joi = require("@hapi/joi")
 // const validate = require("./../utils/validate");
 
 /**
@@ -18,9 +19,16 @@ const jwtSecret = process.env.JWT_SECRET;
 
 class UserContoller {
 
+    constructor(){
+        this.validateLogin = this.validateLogin.bind(this)
+        this.authenticate = this.authenticate.bind(this)
+    }
+
     // user signup
     async signUp(req, res) {
         // validate user
+
+        console.log(req.body)
         const {
             error
         } = validateUser(req.body);
@@ -88,6 +96,7 @@ class UserContoller {
     }
 
     async updateConfig(req, res) {
+        console.log(req.body)
         const user = await User.findByIdAndUpdate({
             _id: req.user._id
         }, {
@@ -100,7 +109,7 @@ class UserContoller {
 
         if (!user) throw new CustomError("user dosen't exist", 404);
 
-        res.status(200).send(response("All Files Found", user.config, true, req));
+        res.status(200).send(response("Configuration updated", user.config, true, req, res));
     }
 
     validateLogin(req) {
