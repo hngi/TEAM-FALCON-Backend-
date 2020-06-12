@@ -143,7 +143,7 @@ Body: form-data
 
 * Method - DELETE
 
-* URL - http://localhost:5555/api/v1/files/:fileId
+* URL - http://localhost:5555/v1/files/:fileId
 
 * Sample Response
 
@@ -168,7 +168,7 @@ Body: form-data
 
 * Method - POST
 
-* URL - http://localhost:5555/api/v1/users/signup
+* URL - http://localhost:5555/v1/users/signup
 
 * Sample Request
 
@@ -194,7 +194,7 @@ Body: form-data
 
 * Method - POST
 
-* URL - http://localhost:5555/api/v1/users/auth
+* URL - http://localhost:5555/v1/users/auth
 
 * Sample Request
 
