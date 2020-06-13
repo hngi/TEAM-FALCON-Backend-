@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 
 
-function validateUser(investor) {
+function validateUser(body) {
     const schema = Joi.object({
         fullName: Joi.string()
             .max(150)
@@ -59,7 +59,7 @@ function validateUser(investor) {
             .required()
     });
 
-    return schema.validate(investor);
+    return schema.validate(body);
 }
 
 
