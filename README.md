@@ -23,113 +23,204 @@ npm run test
 
 ### Testing
 
-### Files
+### Users
 
-| Routes&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Description                                                        |
-| -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| POST :: /v1/files                                                | Create a file                         |
-| GET :: /v1/files                                                 | Get all files                         |
-| GET :: /v1/files/:fileId                                         | Get a file                            |
-| UPDATE :: /v1/files/::fileId                                     | Update a file                         |
-| DELETE :: /v1/files/:fileId                                      | Delete a file                         |
+| Routes&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Description |
+| ------------------------------------------------------------------------------------------------------- | ----------- |
+| POST :: /v1/users/signup                                                                                | User Signup |
+| POST :: /v1/users/signin                                                                                | User Login  |
 
-#### Create a File
+#### User Signup
 
-* Method - POST
+- Method - POST
 
-* URL - http://localhost:5555/api/v1/files
+- URL - http://localhost:5555/api/v1/users/signup
 
-* Sample Request
-
-```
-Headers 
-Body: form-data
-    Key - file(file)
-    Value - select file
-```
-
-* Sample Response
+- Sample Request
 
 ```
 {
-    "status": true,
-    "message": "File Uploaded",
-    "data": null
+  "fullName": "Eark Mssien",
+  "email": "eark.mssien@hng.com",
+  "password": "EarkMssien@20Covid"
+}
+```
+
+- Sample Response
+
+```
+{
+    "message": "User created",
+    "data": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZTQ5ODM5NmM2YTEyMDAxMmNjNWExZiIsImlhdCI6MTU5MjAzOTQ4MSwiZXhwIjoxNTkyMDc1NDgxfQ.T-5c2-tacuzDn2GgSlLb4TuyIhemImwBHJ66HBPUJ3Y",
+        "uid": "5ee498396c6a120012cc5a1f",
+        "fullName": "Eark Mssien",
+        "email": "eark.mssien@hng.com"
+    },
+    "success": true
+}
+```
+
+#### User Login
+
+- Method - POST
+
+- URL - http://localhost:5555/api/v1/users/signin
+
+- Sample Request
+
+```
+{
+  "email": "eark.mssien@hng.com",
+  "password": "EarkMssien@20Covid"
+}
+```
+
+- Sample Response
+
+```
+{
+    "message": "User",
+    "data": {
+        "uid": "5ee498396c6a120012cc5a1f",
+        "email": "eark.mssien@hng.com",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZTQ5ODM5NmM2YTEyMDAxMmNjNWExZiIsImlhdCI6MTU5MjA1NDA3NywiZXhwIjoxNTkyMDkwMDc3fQ.kjffSvKxfleADn7b_G53qX89tDQCyhsQ49qzv8yJlwU"
+    },
+    "success": true
+}
+```
+
+### Testing
+
+### Files
+
+| Routes&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Description   |
+| ------------------------------------------------------------------------------------------------------- | ------------- |
+| POST :: /v1/files                                                                                       | Create a file |
+| GET :: /v1/files                                                                                        | Get all files |
+| GET :: /v1/files/:fileId                                                                                | Get a file    |
+| UPDATE :: /v1/files/:fileId                                                                             | Update a file |
+| DELETE :: /v1/files/:fileId                                                                             | Delete a file |
+
+#### Create a File
+
+- Method - POST
+
+- URL - http://localhost:5555/v1/files
+
+- Sample Request
+
+```
+Headers
+Authorization: Bearer Token
+Body: form-data
+    key - title      | value - mark_dp
+    Key - file(file) | Value - select file
+```
+
+- Sample Response
+
+```
+{
+    "message": "File created",
+    "data": {
+        "title": "mark_dp",
+        "fileURL": "uploads/mark_dp.png",
+        "userId": "eark.mssien@hng.com",
+        "_id": "Vs24LJZ5l"
+    },
+    "success": true
 }
 ```
 
 #### Get all Files
 
-* Method - GET
+- Method - GET
 
-* URL - http://localhost:5555/api/v1/files
+- URL - http://localhost:5555/v1/files
 
-* Sample Response
+- Sample Request
+
+```
+Headers
+Authorization: Bearer Token
+```
+
+- Sample Response
 
 ```
 {
-    "status": true,
-    "message": "Files Found",
+    "message": "All Files Found",
     "data": [
         {
-            "id": "5e6288bc8c7fec6308a1d499",
-            "file": "https://res.cloudinary.com/major-stark/image/upload/v1591884570/files/mark.png"
+            "_id": "Vs24LJZ5l",
+            "title": "mark_dp",
+            "fileURL": "uploads/mark_dp.png",
+            "userId": "eark.mssien@hng.com",
+            "createdAt": "2020-06-13T10:01:01.354Z",
+            "updatedAt": "2020-06-13T10:01:01.354Z",
+            "__v": 0
         },
         {
-            "id": "5e6288bc8c7fec6308a1d498",
-            "file": "https://res.cloudinary.com/major-stark/image/upload/v1591884570/files/essien.jpeg"
-        },
-        {
-            "id": "5e6288bc8c7fec6308a1d497",
-            "file": "https://res.cloudinary.com/major-stark/image/upload/v1591884570/files/saucecode.svg"
-        },
-        {
-            "id": "5e6288bc8c7fec6308a1d496",
-            "file": "https://res.cloudinary.com/major-stark/image/upload/v1591884570/files/hng.mp4"
-        },
-        {
-            "id": "5e6288bc8c7fec6308a1d495",
-            "file": "https://res.cloudinary.com/major-stark/image/upload/v1591884570/files/doe.gif"
+            "_id": "1s5uG2fKB",
+            "title": "mark_dp_1",
+            "fileURL": "uploads/mark_dp_1.jpeg",
+            "userId": "eark.mssien@hng.com",
+            "createdAt": "2020-06-13T13:32:18.813Z",
+            "updatedAt": "2020-06-13T13:32:18.813Z",
+            "__v": 0
         }
-    ]
+    ],
+    "success": true
 }
 ```
 
 #### Get a File
 
-* Method - GET
+- Method - GET
 
-* URL - http://localhost:5555/api/v1/files/:fileId
+- URL - http://localhost:5555/v1/files/:fileId
 
-* Sample Response
+```
+Headers
+Authorization: Bearer Token
+```
+
+- Sample Response
 
 ```
 {
-    "status": true,
     "message": "File Found",
     "data": {
-        "id": "5e6288bc8c7fec6308a1d499",
-        "file": "https://res.cloudinary.com/major-stark/image/upload/v1591884570/files/mark.png"
-    }
+        "_id": "Vs24LJZ5l",
+        "title": "mark_dp",
+        "fileURL": "uploads/mark_dp.png",
+        "userId": "eark.mssien@hng.com",
+        "createdAt": "2020-06-13T10:01:01.354Z",
+        "updatedAt": "2020-06-13T10:01:01.354Z",
+        "__v": 0
+    },
+    "success": true
 }
 ```
 
 #### Update a File
 
-* Method - PUT
+- Method - PUT
 
-* URL - http://localhost:5555/api/v1/files/:fileId
+- URL - http://localhost:5555/v1/files/:fileId
 
-* Sample Request
+- Sample Request
 
 ```
-Headers 
+Headers
+Authorization: Bearer Token
 Body: form-data
-    Key - file(file)
-    Value - select file
+    key - name       | value - updated_mark_dp
+    Key - file(file) | Value - select file
 ```
 
-* Sample Response
+- Sample Response
 
 ```
 {
@@ -141,11 +232,11 @@ Body: form-data
 
 #### Delete a File
 
-* Method - DELETE
+- Method - DELETE
 
-* URL - http://localhost:5555/api/v1/files/:fileId
+- URL - http://localhost:5555/api/v1/files/:fileId
 
-* Sample Response
+- Sample Response
 
 ```
 {
@@ -155,57 +246,8 @@ Body: form-data
 }
 ```
 
-### Testing
-
-### Users
-
-| Routes&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Description                                                        |
-| -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| POST :: /v1/users/signup                                         | User Signup                                |
-| POST :: /v1/users/auth                                           | User Login                                 |
-
-#### User Signup
-
-* Method - POST
-
-* URL - http://localhost:5555/api/v1/users/signup
-
-* Sample Request
-
-```
-{
-  "fullName": "Eark Mssien",
-  "email": "eark.mssien@hng.com",
-  "password": "EarkMssien@20Covid"
-}
-```
-
-* Sample Response
-
-```
-{
-  "uid": "28937837gyu82746hfg76",
-  "fullName": "Eark Mssien",
-  "email": "eark.mssien@hng.com",
-  "token": "xxxxxxxxxxxxxxxxxxxxx"
-}
-```
-#### User Login
-
-* Method - POST
-
-* URL - http://localhost:5555/api/v1/users/auth
-
-* Sample Request
-
-```
-{
-  "email": "eark.mssien@hng.com",
-  "password": "EarkMssien@20Covid"
-}
-```
-
 #### File structure
+
 ```
 +- config/
 +----- db.js - handles db connection
