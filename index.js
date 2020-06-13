@@ -14,6 +14,7 @@ const errorMiddleware = require("./middleware/error");
 const initDB = require("./config/db");
 const { authorize } = require("./middleware/auth");
 const { updateConfig } = require("./controllers/users");
+const CustomError = require("./utils/CustomError");
 
 app.use(cors());
 app.use(morgan("dev"));
@@ -21,20 +22,23 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "./uploads/")));
 
-//Api routes
+
+// Routes
 app.use("/v1/files", authorize(), fileRoutes);
 app.use("/v1/users", userRoutes);
+app.get("/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.post("/v1/configure", authorize(), updateConfig);
 app.get("/v1/documentation", (req, res) => {
   res.json(swaggerDocument);
 });
-app.post("/v1/configure", authorize(), updateConfig);
+app.get("/", (req, res) => {
+  res.redirect("/v1/docs");
+});
 
-// Home page
-app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 //Handle invalid api endpoints
-app.use((req, res, next) => {
-  throw new CustomError("Invalid request", 400);
+app.get('*', function (req, res) {
+  throw new CustomError("Route dosen't exist", 404);
 });
 
 // Handle server erros
