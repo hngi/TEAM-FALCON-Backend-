@@ -8,7 +8,8 @@ const configSchema = new mongoose.Schema({
     responseType: {
         type: String,
         default: "JSON",
-        enum: ["JSON", "XML"]
+        enum: ["JSON", "XML"],
+        trim: true
     },
     fullURL: {
         type: Boolean,
